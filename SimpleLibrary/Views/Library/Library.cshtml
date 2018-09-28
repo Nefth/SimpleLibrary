@@ -1,0 +1,39 @@
+﻿@using System.Web.UI.WebControls
+@using SimpleLibrary.Models
+
+@{var bookDivStyle = "padding: 10px 10px 10px 10px; margin: 5px; border-style: solid;";}
+
+<h1>Filters: </h1>
+
+<button type="Available" onclick="location.href='@Url.Action( "Library", "Library", routeValues: new {isAvailable = 0})'" class="btn btn-outline-secondary">Available</button>
+<button type="Borrows" onclick="location.href='@Url.Action("Library", "Library", routeValues: new  {isAvailable = 1 })'" class="btn btn-outline-secondary">Borrows</button>
+<button type="All" onclick="location.href='@Url.Action("Library", "Library", routeValues: new { isAvailable = -1 })'" class="btn btn-outline-secondary">All</button>
+
+<div class="row">
+
+    @foreach (Book book in @Model)
+    {
+        var bookstyle = "";
+
+
+        if (!book.isAvailable)
+        { bookstyle = "background-color: #969696;";}
+        else
+        { bookstyle = ""; }
+
+
+        <div class="col-md-3" style="@bookstyle @bookDivStyle">
+            <ul>
+                <li>ID: @book.id</li>
+                <li>Tytuł: @book.title</li>
+                <li>Autor: @book.author</li>
+                <li>Dostępność: @(book.isAvailable == true ? "Dostępny" : "Wypożyczone")</li>
+            </ul>
+            <div class="btn btn-success" onclick="location.href='@Url.Action( "borrowBook", "Library", routeValues: new { id = book.id, isAvailable = (Request.Params["isAvailable"]) })'">@(book.isAvailable == true ? "Zwróć książkę" : "Wypożycz")</div>
+        </div>
+    }
+
+
+</div>
+<h2>Library</h2>
+
